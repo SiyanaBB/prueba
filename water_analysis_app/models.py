@@ -2,15 +2,17 @@ from flask_sqlalchemy import SQLAlchemy
 from typing import List
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-db = SQLAlchemy()
+from water_analysis_app import db
+from werkzeug.security import generate_password_hash
 
 class User(db.Model):
-    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
     feedbacks = db.relationship('Feedback', back_populates='user')
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
 
 class Feedback(db.Model):
     __tablename__ = 'feedback'
@@ -50,7 +52,6 @@ class Location(db.Model):
     site_name = db.Column(db.String(120), nullable=False)
     decimal_latitude = db.Column(db.Float, nullable=False)
     decimal_longitude = db.Column(db.Float, nullable=False)
-
 
 class Feature(db.Model):
     __tablename__ = 'feature'

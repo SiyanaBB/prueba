@@ -3,17 +3,10 @@ from datetime import datetime
 import pandas as pd
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from models import db
-from models import XTest, XTrain, YTest, YTrain, Feature, Location, User, Data, Prediction, Visualization
+from water_analysis_app import db, create_app
+from water_analysis_app.models import XTest, XTrain, YTest, YTrain, Feature, Location, User, Data, Prediction, Visualization
 
-app = Flask(__name__, instance_relative_config=True)
-
-# Adjust the path as necessary for your project
-db_path = 'sqlite:///' + str(Path(__file__).parent.joinpath('water_quality_analysis.db'))
-app.config['SQLALCHEMY_DATABASE_URI'] = db_path
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db.init_app(app)
+app = create_app()
 
 def create_tables():
     with app.app_context():
